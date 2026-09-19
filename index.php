@@ -77,7 +77,7 @@
         </div>
 
         <div class="footer">
-            Powered by GitHub Actions & Hostinger
+            Powered by GitHub Actions & Hostinger & SSH
         </div>
     </div>
 
