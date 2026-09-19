@@ -33,7 +33,7 @@ jobs:
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          tar -czf - --exclude=.git --exclude=.github . | \
+          tar -czf - --exclude=.git --exclude=.github . |  \
             sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
               -o PreferredAuthentications=password -o PubkeyAuthentication=no \
               -o ConnectTimeout=30 -o ServerAliveInterval=15 \
