@@ -1,0 +1,44 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+env:
+  REMOTE_DIR: /home/u387692637/domains/db.ozautorepair.com/public_html
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Check there are files to deploy
+        run: |
+          ls -la
+          if [ -z "$(find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github)" ]; then
+            echo "::error::Repo has no files to deploy. Commit and push your files first."
+            exit 1
+          fi
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Deploy to public_html
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          tar -czf - --exclude=.git --exclude=.github . | \
+            sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+              -o PreferredAuthentications=password -o PubkeyAuthentication=no \
+              -o ConnectTimeout=30 -o ServerAliveInterval=15 \
+              -p "${{ secrets.SSH_PORT }}" \
+              "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" \
+              "mkdir -p '$REMOTE_DIR' && tar -xzf - -C '$REMOTE_DIR' && ls -la '$REMOTE_DIR'"
+
+          echo "Deployment completed successfully."
