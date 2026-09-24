@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_DIR: /home/u387692637/domains/db.ozautorepair.com/public_html
+  REMOTE_DIR: /home/u382637/domains/yourdomain.com/public_html
 
 jobs:
   deploy:
